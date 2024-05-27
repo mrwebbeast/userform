@@ -29,7 +29,7 @@ class AppThemes {
           fontWeight: FontWeight.w700,
         ),
       ),
-      scaffoldBackgroundColor: Colors.grey.shade50,
+      scaffoldBackgroundColor: Colors.white,
       iconTheme: IconThemeData(color: Colors.grey.shade700),
     );
   }

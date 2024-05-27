@@ -1,4 +1,4 @@
-import "package:intl/intl.dart";
+
 
 class Validator {
   /// Name Validator.
@@ -210,16 +210,5 @@ class Validator {
     return null;
   }
 
-  /// Validates that a value is a valid date format.
-  static String? dateValidator(String? value, [String? fieldName]) {
-    if (value == null || value.isEmpty) {
-      return '${fieldName ?? 'Date'} is required';
-    }
-    try {
-      DateFormat.yMd().parseStrict(value);
-    } catch (_) {
-      return 'Invalid ${fieldName ?? 'date'} format';
-    }
-    return null;
-  }
+
 }

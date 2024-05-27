@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 import "package:mrwebbeast/features/users/controller/users_controller.dart";
 import "package:mrwebbeast/features/users/models/user_data.dart";
+import "package:mrwebbeast/features/users/screens/users_form_screen.dart";
 import "package:mrwebbeast/utils/extension/null_safe/null_safe_list_extension.dart";
 import "package:mrwebbeast/utils/theme/colors.dart";
 import "package:mrwebbeast/utils/theme/shadows.dart";
@@ -9,6 +10,8 @@ import "package:mrwebbeast/utils/theme/shadows.dart";
 import "package:mrwebbeast/core/routes/route_configs.dart";
 import "package:mrwebbeast/utils/widgets/common/no_data_found.dart";
 import "package:provider/provider.dart";
+
+import "package:mrwebbeast/services/database/local_database.dart";
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -23,7 +26,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      LocalDatabase().getUsers();
+    });
   }
 
   @override
@@ -49,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ? ListView.builder(
                   itemCount: users?.length,
                   itemBuilder: (context, index) {
+                    UserData? user = users?.elementAt(index);
                     return Container(
                       margin: const EdgeInsets.only(left: 16, right: 16, top: 12),
                       decoration: BoxDecoration(
@@ -57,14 +63,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: ListTile(
-                        title: Text("${index + 1}) Sahil Ranout | Male"),
-                        subtitle: const Text("mrwebbeast@gmail.com"),
+                        title: Text("${index + 1}) ${user?.name ?? ''} | ${user?.gender ?? ''}"),
+                        subtitle: Text(user?.email ?? ""),
                         trailing: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             InkWell(
                               onTap: () {
-                                context.push(Routes.manageUsers, extra: UserData());
+                                context.push(Routes.manageUsers,
+                                    extra: UserFormScreen(index: index, user: user));
                               },
                               child: const Icon(
                                 Icons.edit,
@@ -85,7 +92,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   },
                 )
-              : const NoDataFound(message: "No Users Found",);
+              : const NoDataFound(
+                  message: "No Users Found",
+                );
         },
       ),
     );

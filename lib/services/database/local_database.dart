@@ -33,7 +33,7 @@ class LocalDatabase {
 
     BuildContext? context = getContext();
     if (context != null) {
-      context.read<UsersController>().setUsers(users);
+      context.read<UsersController>().updateLocalDatabaseUsers(users);
     }
     return users;
   }

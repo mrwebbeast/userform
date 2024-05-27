@@ -2,7 +2,8 @@ import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 import "package:mrwebbeast/features/home/screen/home_screen.dart";
-import "package:mrwebbeast/features/users/screens/manage_users.dart";
+
+import "package:mrwebbeast/features/users/screens/users_form_screen.dart";
 
 import "package:mrwebbeast/utils/extension/normal/build_context_extension.dart";
 
@@ -10,7 +11,7 @@ import "package:mrwebbeast/app.dart";
 
 import "package:mrwebbeast/core/routes/route_configs.dart";
 
-import "package:mrwebbeast/features/users/models/user_data.dart";
+
 
 class RoutesScreens {
   ///1)  Route Config...
@@ -30,8 +31,14 @@ class RoutesScreens {
         name: Routes.manageUsers,
         path: Routes.manageUsers,
         pageBuilder: (context, state) {
-          UserData? data = state.extra as UserData?;
-          return materialPage(state: state, child: ManageUsers(user: data));
+          UserFormScreen? data = state.extra as UserFormScreen?;
+
+          return materialPage(
+              state: state,
+              child: UserFormScreen(
+                index: data?.index,
+                user: data?.user,
+              ));
         },
       ),
     ],
