@@ -9,15 +9,15 @@ import "package:mrwebbeast/utils/extension/normal/build_context_extension.dart";
 import "package:mrwebbeast/utils/extension/null_safe/null_safe_list_extension.dart";
 import "package:mrwebbeast/utils/functions/show_snack_bar.dart";
 import "package:mrwebbeast/utils/widgets/button/app_button.dart";
+import "package:mrwebbeast/utils/widgets/common/loading_screen.dart";
 
 import "package:mrwebbeast/utils/widgets/common/no_data_found.dart";
 import "package:provider/provider.dart";
 
 class UserFormScreen extends StatefulWidget {
-  const UserFormScreen({super.key, required this.users, this.index});
+  const UserFormScreen({super.key, this.index});
 
   final int? index;
-  final List<UserData?>? users;
 
   @override
   State<UserFormScreen> createState() => _UserFormScreenState();
@@ -27,17 +27,26 @@ class _UserFormScreenState extends State<UserFormScreen> {
   late int? index = widget.index;
   late bool editMode = index != null;
   List<UserData?>? users;
-  GlobalKey<FormState> userFormKey = GlobalKey<FormState>();
+
+  bool loading = true;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      context.read<UsersController>().clearFormUsers();
-      if (editMode == true) {
-        context.read<UsersController>().addFormUsers(users: widget.users);
+      Future.delayed(const Duration(milliseconds: 100)).then((v) {
+        loading = false;
+        setState(() {});
+      });
+
+      UsersController usersController = Provider.of(context, listen: false);
+      usersController.clearFormUsers();
+
+      if (index != null) {
+        final List<UserData?>? users = usersController.usersGroups?.elementAt(index!);
+        usersController.addFormUsers(users: users);
       } else {
-        context.read<UsersController>().addFormUser(user: UserData());
+        usersController.addFormUser(user: UserData());
       }
     });
   }
@@ -65,20 +74,23 @@ class _UserFormScreenState extends State<UserFormScreen> {
               ),
             ],
           ),
-          body: users.haveData
-              ? Form(
-                  key: userFormKey,
-                  child: ListView.builder(
+          body: loading
+              ? const LoadingScreen()
+              : users.haveData
+                  ? ListView.builder(
                     shrinkWrap: true,
                     itemCount: users?.length,
                     itemBuilder: (context, index) {
-                      return UserForm(index: index);
+                      UserData? user = users?.elementAt(index);
+                      return UserForm(
+                        index: index,
+                        user: user,
+                      );
                     },
-                  ),
-                )
-              : const NoDataFound(
-                  message: "No User Found",
-                ),
+                  )
+                  : const NoDataFound(
+                      message: "No User Found",
+                    ),
           bottomNavigationBar: AppButton(
             height: 45,
             text: users != null ? "Update" : "Save",

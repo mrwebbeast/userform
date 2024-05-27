@@ -11,8 +11,6 @@ import "package:mrwebbeast/app.dart";
 
 import "package:mrwebbeast/core/routes/route_configs.dart";
 
-
-
 class RoutesScreens {
   ///1)  Route Config...
 
@@ -33,13 +31,7 @@ class RoutesScreens {
         pageBuilder: (context, state) {
           UserFormScreen? data = state.extra as UserFormScreen?;
 
-          return materialPage(
-              state: state,
-              child: UserFormScreen(
-                index: data?.index,
-                users: data?.users,
-
-              ));
+          return materialPage(state: state, child: UserFormScreen(index: data?.index));
         },
       ),
     ],

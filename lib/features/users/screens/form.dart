@@ -11,9 +11,10 @@ import "package:mrwebbeast/features/users/models/user_data.dart";
 import "package:provider/provider.dart";
 
 class UserForm extends StatefulWidget {
-  const UserForm({super.key, required this.index});
+  const UserForm({super.key, required this.index, this.user});
 
   final int index;
+  final UserData? user;
 
   @override
   State<UserForm> createState() => _UserFormState();
@@ -21,20 +22,12 @@ class UserForm extends StatefulWidget {
 
 class _UserFormState extends State<UserForm> {
   late int index = widget.index;
-  UserData? user;
-  String? name;
-  String? email;
-  String? gender;
-  GlobalKey<FormState> userFormKey = GlobalKey<FormState>();
-
+  late UserData? user = widget.user;
   @override
   Widget build(BuildContext context) {
     return Consumer<UsersController>(builder: (context, controller, child) {
+      GlobalKey<FormState> userFormKey = GlobalKey<FormState>();
       user = controller.formUsers?.elementAt(index);
-      name = user?.name;
-      email = user?.email;
-      gender = user?.gender;
-
       return Form(
         key: userFormKey,
         child: Container(
@@ -70,7 +63,7 @@ class _UserFormState extends State<UserForm> {
                 ],
               ),
               AppTextField(
-                initialValue: name,
+                initialValue: user?.name,
                 autofocus: true,
                 prefixIcon: Icon(Icons.person, color: context.colorScheme.primary),
                 validator: (val) {
@@ -84,7 +77,7 @@ class _UserFormState extends State<UserForm> {
                 margin: const EdgeInsets.only(left: 8, right: 8, top: 16),
               ),
               AppTextField(
-                initialValue: email,
+                initialValue: user?.email,
                 autofocus: true,
                 prefixIcon: Icon(Icons.email_outlined, color: context.colorScheme.primary),
                 validator: (val) {
@@ -109,7 +102,7 @@ class _UserFormState extends State<UserForm> {
                     return RadioMenuButton(
                       value: data,
                       toggleable: true,
-                      groupValue: gender,
+                      groupValue: user?.gender,
                       onChanged: (val) {
                         context.read<UsersController>().changeGender(index: index, val: val);
                       },

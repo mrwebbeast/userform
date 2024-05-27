@@ -139,7 +139,7 @@ class UserCard extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  context.push(Routes.manageUsers, extra: UserFormScreen(index: index, users: users));
+                  context.push(Routes.manageUsers, extra: UserFormScreen(index: index));
                 },
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
