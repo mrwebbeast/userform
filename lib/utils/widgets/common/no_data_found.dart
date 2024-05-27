@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:mrwebbeast/core/config/app_assets.dart";
 import "package:mrwebbeast/utils/theme/colors.dart";
-import "package:mrwebbeast/utils/widgets/image/image_view.dart";
 
 class NoDataFound extends StatefulWidget {
   const NoDataFound({super.key, this.message, this.heightFactor, this.widthFactor, this.title, this.onTap});
@@ -35,19 +34,17 @@ class _NoDataFoundState extends State<NoDataFound> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ImageView(
+            Image.asset(
+              AppAssets.noImage,
               width: 200,
-              assetImage: AppAssets.noImage,
-              margin: const EdgeInsets.only(bottom: 24),
-              onTap: onTap,
             ),
             if (title != null)
               Padding(
-                padding: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
                   title ?? "Not Found",
                   style: const TextStyle(
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: FontWeight.w900,
                     color: primaryColor,
                   ),
@@ -58,9 +55,9 @@ class _NoDataFoundState extends State<NoDataFound> {
               message ?? "No Data Found",
               style: const TextStyle(
                 fontSize: 14,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w400,
                 letterSpacing: 0.2,
-                color: primaryColor,
+                color: Colors.grey,
               ),
               textAlign: TextAlign.center,
             ),

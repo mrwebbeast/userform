@@ -19,9 +19,6 @@ dependencies:
   # Navigation & State Management
   go_router: ^14.0.2
   provider: ^6.0.3
-  # UI Utils
-  cached_network_image: ^3.2.2
-
 
 dev_dependencies:
   # Testing Framework

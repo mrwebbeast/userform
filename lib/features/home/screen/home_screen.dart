@@ -62,8 +62,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   },
                 )
-              : const NoDataFound(
-                  message: "No Users Found",
+              : NoDataFound(
+                  title: "No Users Found",
+                  message: "No Users Found click to add new user",
+                  onTap: () {
+                    context.push(Routes.manageUsers);
+                  },
                 );
         },
       ),
@@ -85,7 +89,7 @@ class UserCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(left: 16, right: 16, top: 12),
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: primaryBoxShadow(context),
@@ -109,7 +113,7 @@ class UserCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        user?.name ?? '',
+                        user?.name ?? "",
                         style: context.textTheme.titleMedium?.copyWith(color: primaryColor),
                       ),
                       Text(

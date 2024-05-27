@@ -1,8 +1,6 @@
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 
-import "package:mrwebbeast/core/config/app_assets.dart";
-import "package:mrwebbeast/utils/widgets/image/image_view.dart";
 
 Future loadingDialog({
   required BuildContext context,
@@ -118,92 +116,7 @@ class FutureProgressDialogState extends State<FutureProgressDialog> {
   }
 }
 
-class CustomPopupUI extends StatefulWidget {
-  const CustomPopupUI(
-      {super.key,
-      required this.title,
-      required this.message,
-      this.image,
-      this.descriptionFontSize,
-      this.onWillPop});
 
-  final String title;
-  final String message;
-
-  final String? image;
-  final double? descriptionFontSize;
-  final GestureTapCallback? onWillPop;
-
-  @override
-  State<CustomPopupUI> createState() => _CustomPopupUIState();
-}
-
-class _CustomPopupUIState extends State<CustomPopupUI> {
-  bool? onDismiss;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onWillPop,
-      child: SimpleDialog(
-        backgroundColor: Colors.transparent,
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(0.0))),
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.only(top: 8, bottom: 36),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.white, width: 0.5),
-              borderRadius: const BorderRadius.all(Radius.circular(40)),
-            ),
-            child: Stack(
-              clipBehavior: Clip.none,
-              alignment: Alignment.center,
-              children: [
-                Column(
-                  children: [
-                    ImageView(
-                      height: 200,
-                      width: 300,
-                      fit: BoxFit.contain,
-                      borderRadiusValue: 0,
-                      margin: const EdgeInsets.only(top: 48),
-                      assetImage: widget.image ?? AppAssets.appIcon,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-                      child: Text(
-                        widget.title,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(42, 8, 42, 24),
-                      child: Text(
-                        widget.message,
-                        style: TextStyle(
-                            fontSize: widget.descriptionFontSize ?? 14,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    const CircularProgressIndicator()
-                  ],
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
 
 const _defaultDecoration = BoxDecoration(
   color: Colors.white,
