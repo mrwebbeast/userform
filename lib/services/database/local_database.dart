@@ -22,22 +22,28 @@ class LocalDatabase {
 
   ///Access Local Database data...
 
-  List<UserData?>? getUsers() {
-    List<UserData?>? users = [];
-    List<dynamic>? localProducts = database.get("users");
-    debugPrint("Fetched ${localProducts?.length} UserData from LocalDatabase");
-    for (final UserData? data in localProducts ?? []) {
-      users.add(data);
+  List<List<UserData?>?>? getUsers() {
+    List<List<UserData?>?>? groupUsers = [];
+    List<dynamic>? localGroupUsers = database.get("users");
+    debugPrint("Fetched ${localGroupUsers?.length} UserData from LocalDatabase");
+    for (int index = 0; index < (localGroupUsers?.length ?? 0); index++) {
+      List<dynamic>? data = localGroupUsers?.elementAt(index);
+      List<UserData?> users = [];
+      for (final UserData? user in data ?? []) {
+        debugPrint("data ${user?.name}");
+        users.add(user);
+      }
+      groupUsers.add(users);
     }
 
     BuildContext? context = getContext();
     if (context != null) {
-      context.read<UsersController>().updateLocalDatabaseUsers(users);
+      context.read<UsersController>().updateLocalDatabaseUsers(groupUsers);
     }
-    return users;
+    return groupUsers;
   }
 
-  saveUsers({required List<UserData?>? users}) {
+  saveUsers({required List<List<UserData?>?>? users}) {
     database.put("users", users);
   }
 }

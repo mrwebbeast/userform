@@ -196,6 +196,7 @@ class AppTextField extends StatelessWidget {
             child: TextFormField(
               key: key,
               controller: controller,
+              initialValue: initialValue,
               keyboardType: keyboardType,
               autofocus: autofocus ?? false,
               minLines: minLines ?? 1,

@@ -37,7 +37,8 @@ class RoutesScreens {
               state: state,
               child: UserFormScreen(
                 index: data?.index,
-                user: data?.user,
+                users: data?.users,
+
               ));
         },
       ),

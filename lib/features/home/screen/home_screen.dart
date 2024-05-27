@@ -49,17 +49,24 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Consumer<UsersController>(
         builder: (context, controller, child) {
-          List<UserData?>? users = controller.users;
+          List<List<UserData?>?>? usersGroups = controller.usersGroups;
 
-          return users.haveData
+          return usersGroups.haveData
               ? ListView.builder(
-                  itemCount: users?.length,
+                  itemCount: usersGroups?.length,
                   itemBuilder: (context, index) {
-                    UserData? user = users?.elementAt(index);
-                    return UserCard(
-                      index: index,
-                      user: user,
-                    );
+                    List<UserData?>? users = usersGroups?.elementAt(index);
+
+                    if (users.haveData) {
+                      UserData? user = users?.first;
+                      return UserCard(
+                        index: index,
+                        user: user,
+                        users: users,
+                      );
+                    } else {
+                      return const Text("No User Found in Group");
+                    }
                   },
                 )
               : NoDataFound(
@@ -80,10 +87,12 @@ class UserCard extends StatelessWidget {
     super.key,
     required this.user,
     required this.index,
+    this.users,
   });
 
   final int index;
   final UserData? user;
+  final List<UserData?>? users;
 
   @override
   Widget build(BuildContext context) {
@@ -128,27 +137,27 @@ class UserCard extends StatelessWidget {
                   ),
                 ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      context.push(Routes.manageUsers, extra: UserFormScreen(index: index, user: user));
-                    },
-                    child: const Icon(
+              InkWell(
+                onTap: () {
+                  context.push(Routes.manageUsers, extra: UserFormScreen(index: index, users: users));
+                },
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
                       Icons.edit,
                       color: primaryColor,
                       size: 18,
                     ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 4),
-                    child: Text(
-                      "Edit",
-                      style: TextStyle(color: primaryColor, fontSize: 12),
+                    Padding(
+                      padding: EdgeInsets.only(top: 4),
+                      child: Text(
+                        "Edit",
+                        style: TextStyle(color: primaryColor, fontSize: 12),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               )
             ],
           ),
