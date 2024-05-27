@@ -1,13 +1,19 @@
-import "package:flutter/material.dart";
+import "package:flutter/cupertino.dart";
 import "package:hive_flutter/adapters.dart";
 import "package:mrwebbeast/core/config/app_config.dart";
+import "package:mrwebbeast/features/users/controller/users_controller.dart";
 
+import "package:mrwebbeast/utils/functions/app_functions.dart";
+import "package:provider/provider.dart";
 
-class LocalDatabase extends ChangeNotifier {
+import "package:mrwebbeast/features/users/models/user_data.dart";
+
+class LocalDatabase {
   ///Hive Database Initialization....
 
   static Future initialize() async {
     await Hive.initFlutter();
+    Hive.registerAdapter(UserDataAdapter());
     await Hive.openBox(AppConfig.databaseName);
   }
 
@@ -16,56 +22,23 @@ class LocalDatabase extends ChangeNotifier {
 
   ///Access Local Database data...
 
-  late String? name = database.get("name");
-  late String? email = database.get("email");
-  late String? mobile = database.get("mobile");
-  late String? profilePhoto = database.get("photoUrl");
-  late String? accessToken = database.get("accessToken");
-  late String? deviceToken = database.get("deviceToken");
+  List<UserData?>? getUsers() {
+    List<UserData?>? users = [];
+    List<dynamic>? localProducts = database.get("users");
+    debugPrint("Fetched ${localProducts?.length} UserData from LocalDatabase");
+    for (final UserData? data in localProducts ?? []) {
+      debugPrint("data ${data?.name}");
+      users.add(data);
+    }
 
-  late double? latitude = database.get("latitude");
-  late double? longitude = database.get("longitude");
-  late String? themeMode = database.get("themeMode");
-
-  ///Setting Local Database data...
-  ///
-  // Future updateUser({required UserData user}) async {
-  //   _currentUser = user;
-  //   notifyListeners();
-  //   database.put("uid", user.uid);
-  //   database.put("name", user.name);
-  //   database.put("email", user.email);
-  //   database.put("username", user.username);
-  //   database.put("photoUrl", user.photoUrl);
-  //   database.put("role", user.role);
-  //   database.put("status", user.status);
-  //   database.put("points", user.points);
-  //   database.put("isPremium", user.isPremium);
-  //   database.put("isAnonymous", user.isAnonymous);
-  //   database.put("creationTime", user.creationTime);
-  //   database.put("lastSignInTime", user.lastSignInTime);
-  // }
-
-  setDeviceToken(String? token) {
-    deviceToken = token;
-    database.put("deviceToken", token ?? "");
-    notifyListeners();
+    BuildContext? context = getContext();
+    if (context != null) {
+      context.read<UsersController>().setUsers(users);
+    }
+    return users;
   }
 
-  setThemeMode({required ThemeMode mode}) {
-    themeMode = mode.name;
-    database.put("themeMode", themeMode ?? "");
-    notifyListeners();
-  }
-
-  setLatLong(
-    double? latitude,
-    double? longitude,
-  ) {
-    latitude = latitude;
-    longitude = longitude;
-    database.put("latitude", latitude);
-    database.put("longitude", longitude);
-    notifyListeners();
+  saveUsers({required List<UserData?>? users}) {
+    database.put("users", users);
   }
 }

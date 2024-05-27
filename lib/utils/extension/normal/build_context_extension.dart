@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 /// 1) Navigation Extensions...
 extension Navigation on BuildContext {
@@ -8,7 +7,9 @@ extension Navigation on BuildContext {
   }
 
   Future navigateToReplacement({required Widget child}) {
-    return Navigator.of(this).pushReplacement(MaterialPageRoute(builder: (context) => child)).then((value) => value);
+    return Navigator.of(this)
+        .pushReplacement(MaterialPageRoute(builder: (context) => child))
+        .then((value) => value);
   }
 
   void popUntil({required Widget child}) {
@@ -40,6 +41,4 @@ extension AppTheme on BuildContext {
   TextTheme get textTheme => Theme.of(this).textTheme;
 
   ColorScheme get colorScheme => Theme.of(this).colorScheme;
-
-  AppLocalizations? get localizations => AppLocalizations.of(this);
 }

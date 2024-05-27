@@ -2,8 +2,7 @@ import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 import "package:mrwebbeast/features/home/screen/home_screen.dart";
-import "package:mrwebbeast/features/users/manage_users.dart";
-import "package:mrwebbeast/services/database/local_database.dart";
+import "package:mrwebbeast/features/users/screens/manage_users.dart";
 
 import "package:mrwebbeast/utils/extension/normal/build_context_extension.dart";
 
@@ -32,7 +31,7 @@ class RoutesScreens {
         path: Routes.manageUsers,
         pageBuilder: (context, state) {
           UserData? data = state.extra as UserData?;
-          return materialPage(state: state, child: ManageUsers(user: data ?? UserData()));
+          return materialPage(state: state, child: ManageUsers(user: data));
         },
       ),
     ],
@@ -72,11 +71,6 @@ class RoutesScreens {
   }
 
   static authRedirect(BuildContext context, GoRouterState state) {}
-
-  static bool isAuthenticated() {
-    LocalDatabase localDatabase = LocalDatabase();
-    return localDatabase.accessToken?.isNotEmpty == true;
-  }
 
   ///3)  Material Page ...
 

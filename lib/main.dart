@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:mrwebbeast/app.dart";
-import "package:mrwebbeast/features/home/controller/dashboard_controller.dart";
+import "package:mrwebbeast/features/users/controller/users_controller.dart";
 
 import "package:mrwebbeast/services/database/local_database.dart";
 
@@ -15,7 +15,7 @@ Future main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => DashboardController()),
+        ChangeNotifierProvider(create: (context) => UsersController()),
       ],
       child: const MyApp(),
     ),
