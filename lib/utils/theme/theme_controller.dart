@@ -3,18 +3,13 @@ import "package:mrwebbeast/core/config/app_fonts.dart";
 
 import "package:mrwebbeast/utils/theme/colors.dart";
 
-
-
-
-
-
 class AppThemes {
   ///1) Light Theme...
 
   static ThemeData lightTheme(BuildContext context) {
     return ThemeData(
       primaryColor: primaryColor,
-      canvasColor: Colors.transparent,
+      canvasColor: Colors.white,
       brightness: Brightness.light,
       dividerTheme: DividerThemeData(color: Colors.grey.shade200),
       useMaterial3: false,
@@ -22,14 +17,14 @@ class AppThemes {
       colorScheme: ColorScheme.fromSwatch(
         primarySwatch: createMaterialColor(primaryColor),
       ),
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         elevation: 1,
         backgroundColor: primaryColor,
-        iconTheme: const IconThemeData(
+        iconTheme: IconThemeData(
           color: Colors.white,
         ),
         centerTitle: true,
-        titleTextStyle: const TextStyle(
+        titleTextStyle: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w700,
         ),
@@ -39,37 +34,7 @@ class AppThemes {
     );
   }
 
-  ///2) Dark Theme...
-  static ThemeData darkTheme(BuildContext context) {
-    return ThemeData(
-      brightness: Brightness.dark,
-      primaryColor: primaryColor,
-      useMaterial3: false,
-      fontFamily: AppFonts.defaultFontFamily,
-      canvasColor: Colors.transparent,
-      dividerTheme: DividerThemeData(color: Colors.grey.shade800, thickness: 1),
-      colorScheme: ColorScheme.fromSwatch(
-        primarySwatch: createMaterialColor(primaryColor),
-        brightness: Brightness.dark,
-      ),
-      appBarTheme: const AppBarTheme(
-        elevation: 0,
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
-        centerTitle: true,
-        titleTextStyle: TextStyle(
-          fontSize: 18,
-          color: Colors.white,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-      scaffoldBackgroundColor: Colors.grey.shade900,
-      iconTheme: const IconThemeData(color: Colors.white),
-    );
-  }
-
-  ///3) Text Theme...
+  ///2) Text Theme...
   static TextTheme textTheme(BuildContext context) {
     TextTheme defaultTheme = Theme.of(context).textTheme; // Get the default theme
 

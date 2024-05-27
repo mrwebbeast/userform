@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:mrwebbeast/core/routes/route_screens.dart";
 
-import "package:provider/provider.dart";
 import "package:mrwebbeast/core/config/app_config.dart";
 import "package:mrwebbeast/utils/theme/theme_controller.dart";
 
@@ -27,7 +26,7 @@ class _MyAppState extends State<MyApp> {
       title: AppConfig.appName,
       debugShowCheckedModeBanner: false,
       theme: AppThemes.lightTheme(context),
-      darkTheme: AppThemes.darkTheme(context),
+      darkTheme: AppThemes.lightTheme(context),
       themeMode: ThemeMode.light,
       routeInformationParser: RoutesScreens.router.routeInformationParser,
       routerDelegate: RoutesScreens.router.routerDelegate,

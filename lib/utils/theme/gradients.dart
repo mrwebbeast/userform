@@ -3,14 +3,14 @@ import "package:mrwebbeast/utils/theme/colors.dart";
 
 ///Gradient
 
-Gradient primaryGradient =  LinearGradient(
+Gradient primaryGradient =  const LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
   colors: [
     primaryColor,
     secondaryColor,
   ],
-  stops: const [0.13, 0.76],
+  stops: [0.13, 0.76],
 );
 
 Gradient inActiveGradient = LinearGradient(
@@ -32,7 +32,7 @@ Gradient blankGradient = const LinearGradient(begin: Alignment.topLeft, end: Ali
   0.100
 ]);
 
-Gradient textFieldGradient =  LinearGradient(
+Gradient textFieldGradient =  const LinearGradient(
   begin: Alignment.centerRight,
   end: Alignment.centerLeft,
   colors: [

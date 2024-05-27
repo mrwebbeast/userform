@@ -11,11 +11,13 @@ import "package:mrwebbeast/app.dart";
 
 import "package:mrwebbeast/core/routes/route_configs.dart";
 
+import "package:mrwebbeast/features/users/models/user_data.dart";
+
 class RoutesScreens {
   ///1)  Route Config...
 
   static final GoRouter _router = GoRouter(
-    initialLocation: Routes.initialRoute,
+    initialLocation: Routes.homeScreen,
     navigatorKey: MyApp.navigatorKey,
     routes: [
       GoRoute(
@@ -24,13 +26,13 @@ class RoutesScreens {
         pageBuilder: (context, state) {
           return materialPage(state: state, child: const HomeScreen());
         },
-        redirect: authRequired,
       ),
       GoRoute(
         name: Routes.manageUsers,
         path: Routes.manageUsers,
         pageBuilder: (context, state) {
-          return materialPage(state: state, child: const ManageUsers());
+          UserData? data = state.extra as UserData?;
+          return materialPage(state: state, child: ManageUsers(user: data ?? UserData()));
         },
       ),
     ],
@@ -74,17 +76,6 @@ class RoutesScreens {
   static bool isAuthenticated() {
     LocalDatabase localDatabase = LocalDatabase();
     return localDatabase.accessToken?.isNotEmpty == true;
-  }
-
-  static String? authRequired(BuildContext context, GoRouterState state) {
-    debugPrint("isAuthenticated() ${isAuthenticated()}");
-    debugPrint("authRequired");
-    if (!isAuthenticated()) {
-      debugPrint("authRequired");
-
-      return Routes.manageUsers;
-    }
-    return null;
   }
 
   ///3)  Material Page ...

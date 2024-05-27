@@ -1,54 +1,37 @@
-import "dart:io";
-
-import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
-import "package:go_router/go_router.dart";
 
-import "package:image_picker/image_picker.dart";
-import "package:mrwebbeast/services/database/local_database.dart";
-
+import "package:mrwebbeast/core/enum/enums.dart";
+import "package:mrwebbeast/features/users/models/user_data.dart";
 
 import "package:mrwebbeast/utils/extension/normal/build_context_extension.dart";
-import "package:mrwebbeast/utils/functions/app_functions.dart";
-import "package:mrwebbeast/utils/functions/pick_image.dart";
 import "package:mrwebbeast/utils/functions/show_snack_bar.dart";
 import "package:mrwebbeast/utils/widgets/button/app_button.dart";
 import "package:mrwebbeast/utils/widgets/common/app_text_field.dart";
 
-
-import "package:mrwebbeast/utils/theme/colors.dart";
-
 import "package:mrwebbeast/utils/formatters/validators.dart";
 
-import "package:mrwebbeast/utils/widgets/image/image_view.dart";
-
 class ManageUsers extends StatefulWidget {
-  const ManageUsers({super.key});
+  const ManageUsers({super.key, required this.user});
+
+  final UserData? user;
 
   @override
   State<ManageUsers> createState() => _ManageUsersState();
 }
 
 class _ManageUsersState extends State<ManageUsers> {
-  LocalDatabase localDatabase = LocalDatabase();
-  late TextEditingController nameCtrl = TextEditingController(text: localDatabase.name ?? "");
-  late TextEditingController emailCtrl = TextEditingController(text: localDatabase.email ?? "");
-  late TextEditingController mobileCtrl = TextEditingController(text: localDatabase.mobile ?? "");
+  late UserData? user = widget.user;
+  late TextEditingController nameCtrl = TextEditingController(text: user?.name ?? "");
+  late TextEditingController emailCtrl = TextEditingController(text: user?.email ?? "");
+  late String? gender = user?.gender;
 
-  late String? profilePhoto = localDatabase.profilePhoto;
-
-  double imageRadius = 110;
-  File? image;
-  GlobalKey<FormState> editProfileKey = GlobalKey<FormState>();
+  GlobalKey<FormState> userFormKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(
-      (timeStamp) {
-        // AuthControllers controllers = Provider.of(context, listen: false);
-        // controllers.fetchCountries(context: context);
-      },
+      (timeStamp) {},
     );
   }
 
@@ -56,43 +39,12 @@ class _ManageUsersState extends State<ManageUsers> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Edit Profile"),
+        title: Text(user != null ? "Edit User" : "Add User"),
       ),
       body: Form(
-        key: editProfileKey,
+        key: userFormKey,
         child: ListView(
           children: [
-            GestureDetector(
-              onTap: () async {
-                addImages();
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      ImageView(
-                        height: imageRadius,
-                        width: imageRadius,
-                        borderRadiusValue: imageRadius,
-                        isAvatar: true,
-                        file: image,
-                        networkImage: profilePhoto,
-                        fit: BoxFit.cover,
-                        border: Border.all(color: Colors.grey.shade200),
-                        margin: const EdgeInsets.only(left: 8, right: 8, top: 16, bottom: 12),
-                      ),
-                      Positioned(
-                        right: -6,
-                        bottom: 10,
-                        child: Icon(CupertinoIcons.add_circled_solid, size: 24, color: primaryColor),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
             AppTextField(
               controller: nameCtrl,
               autofocus: true,
@@ -115,38 +67,33 @@ class _ManageUsersState extends State<ManageUsers> {
               hintText: "Email",
               margin: const EdgeInsets.only(left: 24, right: 24, top: 12),
             ),
-            AppTextField(
-              controller: mobileCtrl,
-              autofocus: true,
-              enabled: false,
-              labelText: "Mobile Number",
-              keyboardType: TextInputType.number,
-              prefixIcon: Icon(Icons.call, color: context.colorScheme.primary),
-              suffixIcon: Icon(Icons.verified_outlined, color: context.colorScheme.primary, size: 20),
-              limit: 10,
-              validator: (val) {
-                return Validator.numberValidator(val);
-              },
-              hintText: "Enter Mobile Number",
-              margin: const EdgeInsets.only(left: 24, right: 24, top: 14),
+            Container(
+              margin: const EdgeInsets.only(left: 24, right: 24, top: 12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300.withOpacity(0.7),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: DropdownButtonFormField<String?>(
+                value: gender,
+                isExpanded: true,
+                decoration: const InputDecoration(),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                validator: (val) {
+                  return Validator.requiredValidator(val, "Gender");
+                },
+                alignment: Alignment.center,
+                items: Genders.values.map((element) {
+                  return DropdownMenuItem<String?>(
+                    value: element.value,
+                    child: Text(element.value),
+                  );
+                }).toList(),
+                onChanged: (val) {},
+              ),
             ),
-
-            // CustomTextField(
-            //   controller: addressCtrl,
-            //   autofocus: true,
-            //   minLines: 1,
-            //   maxLines: 4,
-            //   prefixIcon: const Icon(Icons.location_on, color: primaryColor),
-            //   labelText: "Address",
-            //   hintText: "Address",
-            //   validator: (val) {
-            //     return Validator.nameValidator(val);
-            //   },
-            //   margin: const EdgeInsets.only(left: 24, right: 24, top: 12),
-            // ),
             AppButton(
               height: 45,
-              text: "Update",
+              text: user != null ? "Add" : "Update",
               backgroundColor: context.colorScheme.primary,
               fontSize: 18,
               onPressed: () {
@@ -162,7 +109,7 @@ class _ManageUsersState extends State<ManageUsers> {
   }
 
   updateProfile() {
-    if (editProfileKey.currentState?.validate() == true) {
+    if (userFormKey.currentState?.validate() == true) {
       FocusScope.of(context).unfocus();
 
       // context.read<AuthControllers>().editProfile(
@@ -175,7 +122,7 @@ class _ManageUsersState extends State<ManageUsers> {
   }
 
   editProfile() async {
-    if (editProfileKey.currentState?.validate() == true) {
+    if (userFormKey.currentState?.validate() == true) {
       // context.read<AuthControllers>().editProfile(
       //   context: context,
       //   fullName: nameController.text,
@@ -187,73 +134,5 @@ class _ManageUsersState extends State<ManageUsers> {
 
       showSnackBar(text: error, error: true);
     }
-  }
-
-  Future<void> updateProfileImage({required ImageSource source}) async {
-    BuildContext? context = getContext();
-    final pickedImg = await ImagePicker().pickImage(source: source);
-    if (context != null) {
-      if (pickedImg != null) {
-        image = File(pickedImg.path);
-      }
-      if (context.mounted) {
-        setState(() {});
-        context.pop();
-      }
-    }
-  }
-
-  Future addImages() async {
-    return showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (context) {
-          return Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(24),
-                topLeft: Radius.circular(24),
-              ),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text(
-                    "Change Profile Pic",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    PickImageButton(
-                      context: context,
-                      text: "Camera",
-                      icon: Icons.camera,
-                      onTap: () {
-                        updateProfileImage(source: ImageSource.camera);
-                      },
-                    ),
-                    PickImageButton(
-                      context: context,
-                      text: "Gallery",
-                      icon: Icons.photo,
-                      onTap: () {
-                        updateProfileImage(source: ImageSource.gallery);
-                      },
-                    )
-                  ],
-                ),
-              ],
-            ),
-          );
-        });
   }
 }

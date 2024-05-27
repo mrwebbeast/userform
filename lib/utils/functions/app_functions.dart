@@ -73,7 +73,7 @@ Future<bool> onAppExit() async {
         useSafeArea: false,
         builder: (context) {
           return CupertinoAlertDialog(
-            title: Text(
+            title: const Text(
               AppConfig.appName,
               style: TextStyle(color: primaryColor),
             ),
@@ -83,7 +83,7 @@ Future<bool> onAppExit() async {
                 onPressed: () {
                   context.pop(false);
                 },
-                child: Text(
+                child: const Text(
                   "No",
                   style: TextStyle(color: primaryColor),
                 ),
