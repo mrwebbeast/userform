@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              context.push(Routes.manageUsers);
+              navigateToMangeUser(context: context);
             },
             icon: const Icon(Icons.add),
           ),
@@ -56,24 +56,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemCount: usersGroups?.length,
                   itemBuilder: (context, index) {
                     List<UserData?>? users = usersGroups?.elementAt(index);
-
-                    if (users.haveData) {
-                      UserData? user = users?.first;
-                      return UserCard(
-                        index: index,
-                        user: user,
-                        users: users,
-                      );
-                    } else {
-                      return const Text("No User Found in Group");
-                    }
+                    return UserCard(
+                      index: index,
+                      users: users,
+                    );
                   },
                 )
               : NoDataFound(
                   title: "No Users Found",
                   message: "No Users Found click to add new user",
                   onTap: () {
-                    context.push(Routes.manageUsers);
+                    navigateToMangeUser(context: context);
                   },
                 );
         },
@@ -85,84 +78,97 @@ class _HomeScreenState extends State<HomeScreen> {
 class UserCard extends StatelessWidget {
   const UserCard({
     super.key,
-    required this.user,
     required this.index,
     this.users,
   });
 
   final int index;
-  final UserData? user;
+
   final List<UserData?>? users;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 16, right: 16, top: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: primaryBoxShadow(context),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: primaryColor,
-                child: Text(
-                  "${index + 1}",
-                  style: context.textTheme.titleMedium?.copyWith(color: Colors.white),
+    if (users.haveData) {
+      UserData? user = users?.first;
+      return Container(
+        margin: const EdgeInsets.only(left: 16, right: 16, top: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: primaryBoxShadow(context),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor: primaryColor,
+                  child: Text(
+                    "${index + 1}",
+                    style: context.textTheme.titleMedium?.copyWith(color: Colors.white),
+                  ),
                 ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          user?.name ?? "",
+                          style: context.textTheme.titleMedium?.copyWith(color: primaryColor),
+                        ),
+                        Text(
+                          "Gender :- ${user?.gender ?? ""}",
+                          style: context.textTheme.bodyMedium,
+                        ),
+                        Text(
+                          "Email  :- ${user?.email ?? ""}",
+                          style: context.textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    navigateToMangeUser(context: context, users: users, index: index);
+                  },
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        user?.name ?? "",
-                        style: context.textTheme.titleMedium?.copyWith(color: primaryColor),
+                      Icon(
+                        Icons.edit,
+                        color: primaryColor,
+                        size: 18,
                       ),
-                      Text(
-                        "Gender :- ${user?.gender ?? ""}",
-                        style: context.textTheme.bodyMedium,
-                      ),
-                      Text(
-                        "Email  :- ${user?.email ?? ""}",
-                        style: context.textTheme.bodyMedium,
+                      Padding(
+                        padding: EdgeInsets.only(top: 4),
+                        child: Text(
+                          "Edit",
+                          style: TextStyle(color: primaryColor, fontSize: 12),
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  context.push(Routes.manageUsers, extra: UserFormScreen(index: index));
-                },
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.edit,
-                      color: primaryColor,
-                      size: 18,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 4),
-                      child: Text(
-                        "Edit",
-                        style: TextStyle(color: primaryColor, fontSize: 12),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ],
-      ),
-    );
+                )
+              ],
+            ),
+          ],
+        ),
+      );
+    } else {
+      return const SizedBox();
+    }
   }
+}
+
+Future navigateToMangeUser({
+  required BuildContext context,
+  int? index,
+  List<UserData?>? users,
+}) async {
+  context.read<UsersController>().addFormUsers(users: users ?? [UserData()]);
+  return context.pushNamed(Routes.manageUsers, extra: UserFormScreen(index: index));
 }

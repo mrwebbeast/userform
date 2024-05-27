@@ -14,54 +14,17 @@ import "package:mrwebbeast/utils/widgets/common/loading_screen.dart";
 import "package:mrwebbeast/utils/widgets/common/no_data_found.dart";
 import "package:provider/provider.dart";
 
-class UserFormScreen extends StatefulWidget {
+class UserFormScreen extends StatelessWidget {
   const UserFormScreen({super.key, this.index});
 
   final int? index;
 
   @override
-  State<UserFormScreen> createState() => _UserFormScreenState();
-}
-
-class _UserFormScreenState extends State<UserFormScreen> {
-  late int? index = widget.index;
-  late bool editMode = index != null;
-  List<UserData?>? users;
-
-  bool loading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      Future.delayed(const Duration(milliseconds: 100)).then((v) {
-        loading = false;
-        setState(() {});
-      });
-
-      UsersController usersController = Provider.of(context, listen: false);
-      usersController.clearFormUsers();
-
-      if (index != null) {
-        final List<UserData?>? users = usersController.usersGroups?.elementAt(index!);
-        usersController.addFormUsers(users: users);
-      } else {
-        usersController.addFormUser(user: UserData());
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    users = null;
-  }
-
-  @override
   Widget build(BuildContext context) {
+    late bool editMode = index != null;
     return Consumer<UsersController>(
       builder: (context, controller, child) {
-        users = controller.formUsers;
+        List<UserData?>? users = controller.formUsers;
         return Scaffold(
           appBar: AppBar(
             title: Text(editMode ? "Edit Users" : "Add Users"),
@@ -74,31 +37,34 @@ class _UserFormScreenState extends State<UserFormScreen> {
               ),
             ],
           ),
-          body: loading
+          body: controller.loadingFormUser
               ? const LoadingScreen()
               : users.haveData
                   ? ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: users?.length,
-                    itemBuilder: (context, index) {
-                      UserData? user = users?.elementAt(index);
-                      return UserForm(
-                        index: index,
-                        user: user,
-                      );
-                    },
-                  )
+                      shrinkWrap: true,
+                      itemCount: users?.length,
+                      itemBuilder: (context, index) {
+                        UserData? user = users?.elementAt(index);
+                        return UserForm(
+                          index: index,
+                          user: user,
+                        );
+                      },
+                    )
                   : const NoDataFound(
                       message: "No User Found",
                     ),
           bottomNavigationBar: AppButton(
             height: 45,
-            text: users != null ? "Update" : "Save",
+            text: controller.formUsers != null ? "Update" : "Save",
             backgroundColor: context.colorScheme.primary,
             fontSize: 16,
             borderRadius: 50,
             onPressed: () {
-              manageUser(context);
+              manageUser(
+                context: context,
+                editMode: editMode,
+              );
             },
             mainAxisAlignment: MainAxisAlignment.center,
             margin: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 24),
@@ -108,7 +74,10 @@ class _UserFormScreenState extends State<UserFormScreen> {
     );
   }
 
-  manageUser(BuildContext context) async {
+  manageUser({
+    required BuildContext context,
+    required bool editMode,
+  }) async {
     String? error = context.read<UsersController>().isValidateForm();
     if (error != null) {
       showSnackBar(text: error, color: Colors.red, icon: Icons.error_outline_rounded);
@@ -116,9 +85,9 @@ class _UserFormScreenState extends State<UserFormScreen> {
       FocusScope.of(context).unfocus();
 
       if (editMode) {
-        await context.read<UsersController>().editUser(index: index, users: users);
+        await context.read<UsersController>().editUser(index: index);
       } else {
-        await context.read<UsersController>().addUser(users: users);
+        await context.read<UsersController>().addUser();
       }
       if (context.mounted) {
         context.pop();

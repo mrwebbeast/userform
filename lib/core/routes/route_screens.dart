@@ -10,6 +10,9 @@ import "package:mrwebbeast/utils/extension/normal/build_context_extension.dart";
 import "package:mrwebbeast/app.dart";
 
 import "package:mrwebbeast/core/routes/route_configs.dart";
+import "package:provider/provider.dart";
+
+import "../../features/users/controller/users_controller.dart";
 
 class RoutesScreens {
   ///1)  Route Config...
@@ -30,7 +33,6 @@ class RoutesScreens {
         path: Routes.manageUsers,
         pageBuilder: (context, state) {
           UserFormScreen? data = state.extra as UserFormScreen?;
-
           return materialPage(state: state, child: UserFormScreen(index: data?.index));
         },
       ),
@@ -61,7 +63,7 @@ class RoutesScreens {
               color: context.colorScheme.primary,
               child: const Text("Home"),
               onPressed: () {
-                context.go(Routes.manageUsers);
+                context.go(Routes.homeScreen);
               },
             ),
           ),

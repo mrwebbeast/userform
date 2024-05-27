@@ -23,11 +23,17 @@ class UserForm extends StatefulWidget {
 class _UserFormState extends State<UserForm> {
   late int index = widget.index;
   late UserData? user = widget.user;
+
+  GlobalKey<FormState> userFormKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Consumer<UsersController>(builder: (context, controller, child) {
-      GlobalKey<FormState> userFormKey = GlobalKey<FormState>();
-      user = controller.formUsers?.elementAt(index);
+      // user = controller.formUsers?.elementAt(index);
+      // name = user?.name;
+      // email = user?.email;
+      // gender = user?.gender;
+
       return Form(
         key: userFormKey,
         child: Container(
@@ -64,7 +70,6 @@ class _UserFormState extends State<UserForm> {
               ),
               AppTextField(
                 initialValue: user?.name,
-                autofocus: true,
                 prefixIcon: Icon(Icons.person, color: context.colorScheme.primary),
                 validator: (val) {
                   return Validator.nameValidator(val);
@@ -78,7 +83,6 @@ class _UserFormState extends State<UserForm> {
               ),
               AppTextField(
                 initialValue: user?.email,
-                autofocus: true,
                 prefixIcon: Icon(Icons.email_outlined, color: context.colorScheme.primary),
                 validator: (val) {
                   return Validator.emailValidator(val);

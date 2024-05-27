@@ -10,9 +10,9 @@ class UsersController extends ChangeNotifier {
 
   ///1) Add User...
 
-  addUser({required List<UserData?>? users}) {
+  addUser() {
     usersGroups ??= [];
-    usersGroups?.add(users);
+    usersGroups?.add(formUsers);
     showSnackBar(text: "Succesfully Added", color: Colors.green);
     updateLocalDatabaseUsers(usersGroups);
     notifyListeners();
@@ -22,11 +22,10 @@ class UsersController extends ChangeNotifier {
 
   editUser({
     required int? index,
-    required List<UserData?>? users,
   }) {
     if (index != null) {
       usersGroups ??= [];
-      usersGroups?[index] = users;
+      usersGroups?[index] = formUsers;
       showSnackBar(text: "Succesfully Updated", color: Colors.green);
       updateLocalDatabaseUsers(usersGroups);
       notifyListeners();
@@ -45,7 +44,8 @@ class UsersController extends ChangeNotifier {
 
   ///Form
 
-  List<UserData?>? formUsers = [];
+  List<UserData?>? formUsers = [UserData()];
+  bool loadingFormUser = false;
 
   addFormUsers({required List<UserData?>? users}) {
     formUsers = List.from(users as Iterable).cast<UserData?>().toList();
@@ -94,8 +94,15 @@ class UsersController extends ChangeNotifier {
   removeFormUser({
     required int index,
   }) {
+    loadingFormUser = true;
     formUsers?.removeAt(index);
     notifyListeners();
+
+    Future.delayed(const Duration(milliseconds: 1)).then((v) {
+      showSnackBar(text: "Removed User");
+      loadingFormUser = false;
+      notifyListeners();
+    });
   }
 
   String? isValidateForm() {
