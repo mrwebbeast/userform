@@ -9,7 +9,6 @@ linter:
   rules:
      avoid_print: true
      prefer_double_quotes: true
-     prefer_foreach: true
      await_only_futures: true
      avoid_shadowing_type_parameters: false
      always_use_package_imports: true

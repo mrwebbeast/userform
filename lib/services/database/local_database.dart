@@ -27,7 +27,6 @@ class LocalDatabase {
     List<dynamic>? localProducts = database.get("users");
     debugPrint("Fetched ${localProducts?.length} UserData from LocalDatabase");
     for (final UserData? data in localProducts ?? []) {
-      debugPrint("data ${data?.name}");
       users.add(data);
     }
 

@@ -52,7 +52,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
               },
               labelText: "Name",
               hintText: "Name",
-              margin: const EdgeInsets.only(left: 24, right: 24, top: 12),
+              margin: const EdgeInsets.only(left: 24, right: 24, top: 24),
             ),
             AppTextField(
               controller: emailCtrl,
@@ -65,68 +65,37 @@ class _UserFormScreenState extends State<UserFormScreen> {
               hintText: "Email",
               margin: const EdgeInsets.only(left: 24, right: 24, top: 12),
             ),
-
-            RadioMenuButton(
-              value: Genders.male.value,
-              toggleable: true,
-              groupValue: "gender",
-              onChanged: (val) {
-                gender = val;
-                setState(() {});
-              },
-              child: Text(Genders.male.value),
+            Container(
+              height: 50,
+              margin: const EdgeInsets.only(left: 16, right: 16, top: 8),
+              child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: Genders.values.length,
+                itemBuilder: (context, index) {
+                  var data = Genders.values.elementAt(index).value;
+                  return RadioMenuButton(
+                    value: data,
+                    toggleable: true,
+                    groupValue: gender,
+                    onChanged: (val) {
+                      gender = val;
+                      setState(() {});
+                    },
+                    child: Text(data),
+                  );
+                },
+              ),
             ),
-            RadioMenuButton(
-              toggleable: true,
-              value: Genders.female.value,
-              groupValue: "gender",
-              onChanged: (val) {
-                gender = val;
-                setState(() {});
-              },
-              child: Text(Genders.female.value),
-            ),
-            // Container(
-            //   margin: const EdgeInsets.only(left: 24, right: 24, top: 12),
-            //   decoration: BoxDecoration(
-            //     color: Colors.grey.shade300.withOpacity(0.7),
-            //     borderRadius: BorderRadius.circular(12),
-            //   ),
-            //   child: DropdownButtonFormField<String?>(
-            //     value: gender,
-            //     isExpanded: true,
-            //     decoration: const InputDecoration(
-            //       border: InputBorder.none,
-            //       // prefixIcon: Icon(Icons.person,color: primaryColor,),
-            //     ),
-            //     hint: const Row(
-            //       children: [Text("Select Gender")],
-            //     ),
-            //     padding: const EdgeInsets.symmetric(horizontal: 12),
-            //     validator: (val) {
-            //       return Validator.requiredValidator(val, "Gender");
-            //     },
-            //     alignment: Alignment.center,
-            //     items: Genders.values.map((element) {
-            //       return DropdownMenuItem<String?>(
-            //         value: element.value,
-            //         child: Text(element.value),
-            //       );
-            //     }).toList(),
-            //     onChanged: (val) {
-            //       gender = val;
-            //       setState(() {});
-            //     },
-            //   ),
-            // ),
           ],
         ),
       ),
       bottomNavigationBar: AppButton(
         height: 45,
-        text: user != null ? "Update" : "Add",
+        text: user != null ? "Update" : "Save",
         backgroundColor: context.colorScheme.primary,
-        fontSize: 18,
+        fontSize: 16,
+        borderRadius: 50,
         onPressed: () {
           manageUser(context);
         },
@@ -137,7 +106,8 @@ class _UserFormScreenState extends State<UserFormScreen> {
   }
 
   manageUser(BuildContext context) async {
-    if (userFormKey.currentState?.validate() == true) {
+    bool isValidate = userFormKey.currentState?.validate() == true;
+    if (isValidate && gender != null) {
       FocusScope.of(context).unfocus();
       UserData user = UserData(
         name: nameCtrl.text,
@@ -153,7 +123,11 @@ class _UserFormScreenState extends State<UserFormScreen> {
         context.pop();
       }
     } else {
-      showSnackBar(text: "All Fields Are Required", color: Colors.red);
+      String error = "All fields Are required";
+      if (isValidate && gender == null) {
+        error = "Gender is required";
+      }
+      showSnackBar(text: error, color: Colors.red, icon: Icons.error_outline_rounded);
     }
   }
 }

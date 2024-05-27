@@ -10,8 +10,7 @@ enum Roles {
 
 enum Genders {
   male("Male"),
-  female("Female"),
-  other("Other");
+  female("Female");
 
   final String value;
 
