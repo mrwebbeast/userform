@@ -1,0 +1,25 @@
+include: package:flutter_lints/flutter.yaml
+analyzer:
+  exclude: [build/**]
+  language:
+    strict-casts: false
+    strict-raw-types: false
+
+linter:
+  rules:
+     avoid_print: true
+     prefer_double_quotes: true
+     prefer_foreach: true
+     await_only_futures: true
+     avoid_shadowing_type_parameters: false
+     always_use_package_imports: true
+     avoid_empty_else: true
+     cancel_subscriptions: true
+     close_sinks: true
+     comment_references: true
+     empty_statements: true
+     library_names: true
+     library_prefixes: true
+     prefer_final_in_for_each: true
+
+# https://dart.dev/guides/language/analysis-options

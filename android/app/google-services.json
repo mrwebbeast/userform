@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "635409391337",
+    "firebase_url": "https://sahilranout-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "sahilranout",
+    "storage_bucket": "sahilranout.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:635409391337:android:3402d7cf8d6cc54243da78",
+        "android_client_info": {
+          "package_name": "app.developer.mrwebbeast"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "635409391337-oo4s3rnc975bamo274lpd4d7170mh1d6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJbYXc25IQcV1nGL5Pgc64iHgosWJQM0Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "635409391337-jcq5c6k77i6en1kln2115hc3f72aslhv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "635409391337-nr1l0v19keno79509h13hdvrtb3oetgt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mrwebbeast.portfolio"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:635409391337:android:d0d7fb255f7ed47343da78",
+        "android_client_info": {
+          "package_name": "com.mrwebbeast.portfolio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "635409391337-oo4s3rnc975bamo274lpd4d7170mh1d6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJbYXc25IQcV1nGL5Pgc64iHgosWJQM0Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "635409391337-jcq5c6k77i6en1kln2115hc3f72aslhv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "635409391337-nr1l0v19keno79509h13hdvrtb3oetgt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mrwebbeast.portfolio"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
